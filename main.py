@@ -813,7 +813,15 @@ class newGraphicView(QtWidgets.QGraphicsView):
                                                                            self.current_pen_thick))
             self.color_num_func()
         else:
-            pass
+            width, height = (main.graphicsView.width(), main.graphicsView.height())
+            img_w, img_h = main.img_size
+            x, y, x_to, y_to = int(x) / img_w, int(y) / img_h, int(x_to) / img_w, int(y_to) / img_h
+            x, x_to, y, y_to = round(float(x) * width), round((float(x_to) - float(x)) * width), \
+                               round(float(y) * height), round((float(y_to) - float(y)) * height)
+            rect = QtCore.QRectF(x, y, x_to, y_to)
+            self.id_[len(self.id_) + 1] = self.sc.addRect(rect, QtGui.QPen(self.pen_color[self.current_color_num],
+                                                                           self.current_pen_thick))
+            self.color_num_func()
 
     def make_crossline(self):
         width, height = (main.graphicsView.width(), main.graphicsView.height())
