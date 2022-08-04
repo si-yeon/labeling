@@ -319,12 +319,12 @@
         </column>
         <column>
          <property name="text">
-          <string>X End</string>
+          <string>Y Start</string>
          </property>
         </column>
         <column>
          <property name="text">
-          <string>Y Start</string>
+          <string>X End</string>
          </property>
         </column>
         <column>

@@ -394,9 +394,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def txt_is_exists(self, current_file_name):
         current_file_name = current_file_name.replace("/", "\\")
-        current_file_name = current_file_name.split("\\")[-2:]
-        path = os.path.join(self.labelPathLineEdit.text(), current_file_name[0])
-        path = os.path.join(path, current_file_name[1][:-3] + "txt")
+        current_file_name = current_file_name.split("\\")[-1:]
+        path = os.path.join(self.labelPathLineEdit.text(), current_file_name[0][:-3] + "txt")
         if os.path.exists(path):
             with open(path, "r") as fr:
                 box_list = fr.read().splitlines()
@@ -407,18 +406,15 @@ class MainWindow(QtWidgets.QMainWindow):
     def table_save_do(self):
         num = self.current_number - 1
         current_file_name = self.file_list[num].replace("/", "\\")
-        current_file_name = current_file_name.split("\\")[-2:]
-        path = os.path.join(self.labelPathLineEdit.text(), current_file_name[0])
-        if not os.path.exists(path):
-            os.mkdir(path)
-        path = os.path.join(path,  current_file_name[1][:-3] + "txt")
+        current_file_name = current_file_name.split("\\")[-1:]
+        path = os.path.join(self.labelPathLineEdit.text(),  current_file_name[0][:-3] + "txt")
         count = self.labelTableWidget.rowCount()
         with open(path, "w") as fw:
             for i in range(count):
                 label = int(self.labelTableWidget.item(i, 1).text())
                 x = self.labelTableWidget.item(i, 2).text()
-                x_to = self.labelTableWidget.item(i, 3).text()
-                y = self.labelTableWidget.item(i, 4).text()
+                y = self.labelTableWidget.item(i, 3).text()
+                x_to = self.labelTableWidget.item(i, 4).text()
                 y_to = self.labelTableWidget.item(i, 5).text()
                 if i != count - 1:
                     line = f"{label} {x} {y} {x_to} {y_to}\n"
@@ -769,13 +765,13 @@ class newGraphicView(QtWidgets.QGraphicsView):
         main.labelTableWidget.setItem(cell_count, 1, QtWidgets.QTableWidgetItem(label))
         if main.status["save values"] == "a":
             main.labelTableWidget.setItem(cell_count, 2, QtWidgets.QTableWidgetItem(str(round(x * main.img_size[0]))))
-            main.labelTableWidget.setItem(cell_count, 3, QtWidgets.QTableWidgetItem(str(round(x_to * main.img_size[0]))))
-            main.labelTableWidget.setItem(cell_count, 4, QtWidgets.QTableWidgetItem(str(round(y * main.img_size[1]))))
+            main.labelTableWidget.setItem(cell_count, 3, QtWidgets.QTableWidgetItem(str(round(y * main.img_size[1]))))
+            main.labelTableWidget.setItem(cell_count, 4, QtWidgets.QTableWidgetItem(str(round(x_to * main.img_size[0]))))
             main.labelTableWidget.setItem(cell_count, 5, QtWidgets.QTableWidgetItem(str(round(y_to * main.img_size[1]))))
         else:
             main.labelTableWidget.setItem(cell_count, 2, QtWidgets.QTableWidgetItem(str(round(x, 5))))
-            main.labelTableWidget.setItem(cell_count, 3, QtWidgets.QTableWidgetItem(str(round(x_to, 5))))
-            main.labelTableWidget.setItem(cell_count, 4, QtWidgets.QTableWidgetItem(str(round(y, 5))))
+            main.labelTableWidget.setItem(cell_count, 3, QtWidgets.QTableWidgetItem(str(round(y, 5))))
+            main.labelTableWidget.setItem(cell_count, 4, QtWidgets.QTableWidgetItem(str(round(x_to, 5))))
             main.labelTableWidget.setItem(cell_count, 5, QtWidgets.QTableWidgetItem(str(round(y_to, 5))))
 
     def color_num_func(self):
@@ -799,14 +795,14 @@ class newGraphicView(QtWidgets.QGraphicsView):
         self.sc.update()
 
     def load_txt(self, data):
-        label, x, x_to, y, y_to = data
+        label, x, y, x_to, y_to = data
         cell_count = main.labelTableWidget.rowCount()
         main.labelTableWidget.setRowCount(cell_count + 1)
         main.labelTableWidget.setItem(cell_count, 0, QtWidgets.QTableWidgetItem(str(cell_count + 1)))
         main.labelTableWidget.setItem(cell_count, 1, QtWidgets.QTableWidgetItem(label))
         main.labelTableWidget.setItem(cell_count, 2, QtWidgets.QTableWidgetItem(x))
-        main.labelTableWidget.setItem(cell_count, 3, QtWidgets.QTableWidgetItem(x_to))
-        main.labelTableWidget.setItem(cell_count, 4, QtWidgets.QTableWidgetItem(y))
+        main.labelTableWidget.setItem(cell_count, 3, QtWidgets.QTableWidgetItem(y))
+        main.labelTableWidget.setItem(cell_count, 4, QtWidgets.QTableWidgetItem(x_to))
         main.labelTableWidget.setItem(cell_count, 5, QtWidgets.QTableWidgetItem(y_to))
         if "." in x:
             width, height = (main.graphicsView.width(), main.graphicsView.height())
@@ -922,13 +918,13 @@ class MakeDataset(QtWidgets.QDialog):
                 new_data = f"{data[0]} {x} {y} {x_to} {y_to}\n"
                 all_label = all_label + new_data
             else:
-                all_label = all_label + line
+                all_label = all_label + line + "\n"
         return all_label[:-2]
 
     def check_over_size(self, data, size):
         if data[1] < 0:
             data[1] = 0
-        if data[2] < 0:
+        if data[3] < 0:
             data[2] = 0
         if data[3] > size[0]:
             data[3] = size[0]
