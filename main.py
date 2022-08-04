@@ -22,6 +22,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.class_path = ""
         self.class_num = -1
         self.label_path = ""
+        self.file_loading = False
         self.deleteAction = QtWidgets.QAction(self)
         self.init_fuc()
         self.show()
@@ -92,6 +93,8 @@ class MainWindow(QtWidgets.QMainWindow):
             if self.graphicsview_size != cur_size:
                 self.graphicsview_size = cur_size
                 self.change_window_size()
+                if len(self.file_list) > 0:
+                    self.txt_is_exists(self.file_list[self.current_number - 1])
         except:
             pass
 
@@ -139,11 +142,12 @@ class MainWindow(QtWidgets.QMainWindow):
             self.fileListWidget.setCurrentRow(self.fileListWidget.currentRow() - 1)
 
     def index_change(self, inx):
-        self.save_txt_call()
-        self.current_number = inx + 1
-        self.filesTextEdit.setText(str(self.current_number))
+        self.filesTextEdit.setText(str(inx + 1))
 
     def number_change(self):
+        if not self.file_loading:
+            self.save_txt_call()
+        self.current_number = int(self.filesTextEdit.text())
         self.button_enable()
         return self.change_file()
 
@@ -198,6 +202,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.upButton.setEnabled(True)
 
     def load_urls(self, urls):
+        self.file_loading = True
         file_list = []
         # 다수의 파일일 경우
         if len(urls) > 1:
@@ -313,6 +318,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.label_path = folder_name
         self.status["pre_label_path"] = self.label_path
         self.labelPathLineEdit.setText(self.label_path)
+        if len(self.file_list) != 0:
+            self.txt_is_exists(self.file_list[self.current_number - 1])
 
     def set_class_table(self, path):
         with open(path, "r") as fr:
@@ -362,22 +369,25 @@ class MainWindow(QtWidgets.QMainWindow):
         self.fileListWidget.setCurrentRow(num)
         current_file_name = self.file_list[num]
         img = QtGui.QImage(current_file_name)
-        pix = QtGui.QPixmap.fromImage(img)
-        self.img_size = (pix.width(), pix.height())
-        pix = pix.scaled(self.graphicsview_size[0], self.graphicsview_size[1])
+        self.pix = QtGui.QPixmap.fromImage(img)
+        self.img_size = (self.pix.width(), self.pix.height())
+        tmp_pix = self.pix.scaled(self.graphicsview_size[0], self.graphicsview_size[1])
         self.pic = QtWidgets.QGraphicsPixmapItem()
-        self.pic.setPixmap(pix)
+        self.pic.setPixmap(tmp_pix)
         self.graphicsView.sc = QtWidgets.QGraphicsScene()
         self.graphicsView.setScene(self.graphicsView.sc)
         self.graphicsView.sc.addItem(self.pic)
         self.graphicsView.fitInView(self.pic)
         self.graphicsView.initialize()
         # self.graphicsView.make_crossline()
-        self.txt_is_exists(current_file_name)
+        if self.file_loading:
+            self.file_loading = False
+        else:
+            self.txt_is_exists(current_file_name)
 
     def change_window_size(self):
-        pix = self.pic.pixmap().scaled(self.graphicsview_size[0], self.graphicsview_size[1])
-        self.pic.setPixmap(pix)
+        tmp_pix = self.pix.scaled(self.graphicsview_size[0], self.graphicsview_size[1])
+        self.pic.setPixmap(tmp_pix)
 
     def save_txt_call(self):
         if self.labelPathLineEdit.text() == "":
@@ -795,6 +805,10 @@ class newGraphicView(QtWidgets.QGraphicsView):
         self.sc.update()
 
     def load_txt(self, data):
+        for k, v in self.id_.items():
+            self.sc.removeItem(v)
+            del v
+        self.initialize()
         label, x, y, x_to, y_to = data
         cell_count = main.labelTableWidget.rowCount()
         main.labelTableWidget.setRowCount(cell_count + 1)
