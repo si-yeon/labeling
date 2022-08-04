@@ -94,7 +94,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.graphicsview_size = cur_size
                 self.change_window_size()
                 if len(self.file_list) > 0:
-                    self.txt_is_exists(self.file_list[self.current_number - 1])
+                    self.cell_is_exists()
         except:
             pass
 
@@ -380,14 +380,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.graphicsView.fitInView(self.pic)
         self.graphicsView.initialize()
         # self.graphicsView.make_crossline()
+        self.txt_is_exists(current_file_name)
         if self.file_loading:
             self.file_loading = False
-        else:
-            self.txt_is_exists(current_file_name)
 
     def change_window_size(self):
         tmp_pix = self.pix.scaled(self.graphicsview_size[0], self.graphicsview_size[1])
         self.pic.setPixmap(tmp_pix)
+        self.graphicsView.sc.setSceneRect(0, 0, self.graphicsview_size[0], self.graphicsview_size[1])
+        self.graphicsView.fitInView(self.pic)
 
     def save_txt_call(self):
         if self.labelPathLineEdit.text() == "":
@@ -413,6 +414,19 @@ class MainWindow(QtWidgets.QMainWindow):
                 data = box.split(" ")
                 self.graphicsView.load_txt(data)
 
+    def cell_is_exists(self):
+        for k, v in self.graphicsView.id_.items():
+            self.graphicsView.sc.removeItem(v)
+            del v
+        self.graphicsView.sub_initialize()
+        for i in range(self.labelTableWidget.rowCount()):
+            label = self.labelTableWidget.item(i, 1).text()
+            x = self.labelTableWidget.item(i, 2).text()
+            y = self.labelTableWidget.item(i, 3).text()
+            x_to = self.labelTableWidget.item(i, 4).text()
+            y_to = self.labelTableWidget.item(i, 5).text()
+            self.graphicsView.load_cell((label, x, y, x_to, y_to))
+
     def table_save_do(self):
         num = self.current_number - 1
         current_file_name = self.file_list[num].replace("/", "\\")
@@ -434,6 +448,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def delete_cell(self, row, column):
         self.graphicsView.delete_box(row)
+        self.graphicsView.current_color_num -= 1
         self.labelTableWidget.removeRow(row)
 
     def to_delete_cell(self):
@@ -790,11 +805,14 @@ class newGraphicView(QtWidgets.QGraphicsView):
             self.current_color_num = 0
 
     def initialize(self):
+        self.sub_initialize()
+        main.labelTableWidget.clearContents()
+        main.labelTableWidget.setRowCount(0)
+
+    def sub_initialize(self):
         self.id_ = {}
         self.current_color_num = 0
         self.img_in = True
-        main.labelTableWidget.clearContents()
-        main.labelTableWidget.setRowCount(0)
 
     def delete_box(self, row):
         del_id = int(main.labelTableWidget.item(row, 0).text())
@@ -805,19 +823,22 @@ class newGraphicView(QtWidgets.QGraphicsView):
         self.sc.update()
 
     def load_txt(self, data):
-        for k, v in self.id_.items():
-            self.sc.removeItem(v)
-            del v
-        self.initialize()
         label, x, y, x_to, y_to = data
         cell_count = main.labelTableWidget.rowCount()
         main.labelTableWidget.setRowCount(cell_count + 1)
         main.labelTableWidget.setItem(cell_count, 0, QtWidgets.QTableWidgetItem(str(cell_count + 1)))
-        main.labelTableWidget.setItem(cell_count, 1, QtWidgets.QTableWidgetItem(label))
+        main.labelTableWidget.setItem(cell_count, 1, QtWidgets.QTableWidgetItem(f"{int(label):04d}"))
         main.labelTableWidget.setItem(cell_count, 2, QtWidgets.QTableWidgetItem(x))
         main.labelTableWidget.setItem(cell_count, 3, QtWidgets.QTableWidgetItem(y))
         main.labelTableWidget.setItem(cell_count, 4, QtWidgets.QTableWidgetItem(x_to))
         main.labelTableWidget.setItem(cell_count, 5, QtWidgets.QTableWidgetItem(y_to))
+        self.load_data(x, y, x_to, y_to)
+
+    def load_cell(self, data):
+        label, x, y, x_to, y_to = data
+        self.load_data(x, y, x_to, y_to)
+
+    def load_data(self, x, y, x_to, y_to):
         if "." in x:
             width, height = (main.graphicsView.width(), main.graphicsView.height())
             x, x_to, y, y_to = round(float(x) * width), round((float(x_to) - float(x)) * width), \
