@@ -196,51 +196,6 @@
          <enum>QLayout::SetFixedSize</enum>
         </property>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <property name="sizeConstraint">
-           <enum>QLayout::SetFixedSize</enum>
-          </property>
-          <item>
-           <widget class="QLabel" name="label_2">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>20</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>110</width>
-              <height>20</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Class File Name : </string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="classFileLabel">
-            <property name="minimumSize">
-             <size>
-              <width>290</width>
-              <height>20</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>20</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
          <widget class="QTableWidget" name="classTableWidget">
           <property name="minimumSize">
            <size>
@@ -251,7 +206,7 @@
           <property name="maximumSize">
            <size>
             <width>16777215</width>
-            <height>100</height>
+            <height>120</height>
            </size>
           </property>
           <property name="autoScroll">
