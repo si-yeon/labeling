@@ -434,7 +434,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Auto Labeling</string>
+    <string>Auto Save</string>
    </property>
   </action>
   <action name="actionABS">
