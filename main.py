@@ -23,6 +23,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.class_num = -1
         self.label_path = ""
         self.file_loading = False
+        self.delete_val = False
         self.deleteAction = QtWidgets.QAction(self)
         self.init_fuc()
         self.show()
@@ -145,13 +146,19 @@ class MainWindow(QtWidgets.QMainWindow):
         self.filesTextEdit.setText(str(inx + 1))
 
     def number_change(self):
-        if not self.file_loading:
+        if not self.file_loading and not self.delete_val:
             self.save_txt_call()
-        self.current_number = int(self.filesTextEdit.text())
+        if self.delete_val:
+            self.delete_val = False
+        txt = self.filesTextEdit.text()
+        if txt == "":
+            return
+        self.current_number = int(txt)
         self.button_enable()
         return self.change_file()
 
     def delete_fuc(self):
+        self.delete_val = True
         if self.status["hard delete"]:
             file_name = self.file_list.pop(self.current_number - 1)
             os.remove(file_name)
@@ -300,9 +307,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def list_in_init(self, num):
         self.filesLabel.setText(str(len(self.file_list)))
-        self.current_number = num
-        self.filesTextEdit.setText(str(self.current_number))
-        self.fileListWidget.setModelColumn(self.current_number - 1)
+        self.fileListWidget.setCurrentRow(num - 1)
         self.filesTextEdit.setEnabled(True)
         self.upButton.setEnabled(True)
         self.deleteButton.setEnabled(True)
@@ -363,6 +368,7 @@ class MainWindow(QtWidgets.QMainWindow):
         num = self.current_number - 1
         if len(self.file_list) <= num:
             self.img_size = (0, 0)
+            self.current_number = len(self.file_list) - 1
             return self.msg_box("Error", "Length Over", "warning")
         elif len(self.file_list) == 0:
             return
