@@ -9,3 +9,9 @@ start **main.py**
 2. Choose where to save the label
 3. Import image
 4. Boxing
+
+## Shortcut Key
+- 'w' : go to Next Image
+- 's' : go to Before Image
+- 'delete' : Delete Image
+- Label Table 'Double Click' : Delete Selected Label
