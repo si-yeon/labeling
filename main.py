@@ -770,18 +770,22 @@ class newGraphicView(QtWidgets.QGraphicsView):
             main.msg_box("Error", "No Have Class Data", "warning")
             del rect
         else:
-            self.id_[len(self.id_) + 1] = self.sc.addRect(rect, QtGui.QPen(self.pen_color[self.current_color_num],
+            id_ = 1
+            if len(self.id_) != 0:
+                for k in self.id_:
+                    id_ = k + 1
+            self.id_[id_] = self.sc.addRect(rect, QtGui.QPen(self.pen_color[self.current_color_num],
                                                                            self.current_pen_thick))
             self.color_num_func()
-            self.write_cell(x, y, x_to, y_to)
+            self.write_cell(id_, x, y, x_to, y_to)
 
-    def write_cell(self, x, y, x_to, y_to):
+    def write_cell(self, id_, x, y, x_to, y_to):
         x, x_to = x / self.sc.width(), x_to / self.sc.width()
         y, y_to = y / self.sc.height(), y_to / self.sc.height()
         cell_count = main.labelTableWidget.rowCount()
         main.labelTableWidget.setRowCount(cell_count + 1)
         label = main.classTableWidget.item(main.class_num, 2).text()
-        main.labelTableWidget.setItem(cell_count, 0, QtWidgets.QTableWidgetItem(str(cell_count + 1)))
+        main.labelTableWidget.setItem(cell_count, 0, QtWidgets.QTableWidgetItem(str(id_)))
         main.labelTableWidget.setItem(cell_count, 1, QtWidgets.QTableWidgetItem(label))
         if main.status["save values"] == "a":
             main.labelTableWidget.setItem(cell_count, 2, QtWidgets.QTableWidgetItem(str(round(x * main.img_size[0]))))
