@@ -115,6 +115,16 @@ class MainWindow(QtWidgets.QMainWindow):
     def close_func(self):
         self.close()
 
+    def mousePressEvent(self, e):
+        if e.button() == QtCore.Qt.LeftButton and not self.graphicsView.boxing:
+            rect = QtCore.QRectF(self.graphicsView.start, self.graphicsView.end)
+            pre_item = self.graphicsView.rect_draw[0]
+            self.graphicsView.sc.removeItem(pre_item)
+            del pre_item
+            self.graphicsView.rect_draw.clear()
+            self.graphicsView.boxing_data_table_in(rect)
+            self.graphicsView.boxing = True
+
     def dragEnterEvent(self, e):
         e.accept()
 
