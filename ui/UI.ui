@@ -269,22 +269,22 @@
         </column>
         <column>
          <property name="text">
-          <string>X Start</string>
+          <string>X Center</string>
          </property>
         </column>
         <column>
          <property name="text">
-          <string>Y Start</string>
+          <string>Y Center</string>
          </property>
         </column>
         <column>
          <property name="text">
-          <string>X End</string>
+          <string>X Size</string>
          </property>
         </column>
         <column>
          <property name="text">
-          <string>Y End</string>
+          <string>Y Size</string>
          </property>
         </column>
        </widget>

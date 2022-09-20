@@ -752,9 +752,6 @@ class newGraphicView(QtWidgets.QGraphicsView):
                 y = round((point.y() / view_size[1]), 5)
                 txt = "X: {:.5f}, Y: {:.5f}".format(x, y)
         main.statusbar.showMessage(txt)
-        # mouse_point = self.mapToScene(e.pos())
-        # self.x_line.setLine(0, mouse_point.y(), self.x_line.x2(), mouse_point.y())
-        # self.y_line.setLine(mouse_point.x(), 0, mouse_point.x(), self.y_line.y2())
         if not self.boxing:
             self.end = self.mapToScene(e.pos())
             rect = QtCore.QRectF(self.start, self.end)
@@ -768,15 +765,7 @@ class newGraphicView(QtWidgets.QGraphicsView):
             self.sc.update()
 
     def boxing_data_table_in(self, rect):
-        x, y, x_to, y_to = rect.x(), rect.y(), rect.x() + rect.width(), rect.y() + rect.height()
-        if x > x_to:
-            tmp = x
-            x = x_to
-            x_to = tmp
-        if y > y_to:
-            tmp = y
-            y = y_to
-            y_to = tmp
+        x, y, x_to, y_to = rect.x() + rect.width()/2, rect.y() + rect.height()/2, rect.width(), rect.height()
         if main.class_num == -1:
             main.msg_box("Error", "No Have Class Data", "warning")
             del rect
@@ -847,22 +836,16 @@ class newGraphicView(QtWidgets.QGraphicsView):
     def load_data(self, x, y, x_to, y_to):
         if "." in x:
             width, height = (main.graphicsView.width(), main.graphicsView.height())
-            x, x_to, y, y_to = round(float(x) * width), round((float(x_to) - float(x)) * width), \
-                               round(float(y) * height), round((float(y_to) - float(y)) * height)
-            rect = QtCore.QRectF(x, y, x_to, y_to)
-            self.id_[len(self.id_) + 1] = self.sc.addRect(rect, QtGui.QPen(self.pen_color[self.current_color_num],
-                                                                           self.current_pen_thick))
-            self.color_num_func()
         else:
             width, height = (main.graphicsView.width(), main.graphicsView.height())
             img_w, img_h = main.img_size
             x, y, x_to, y_to = int(x) / img_w, int(y) / img_h, int(x_to) / img_w, int(y_to) / img_h
-            x, x_to, y, y_to = round(float(x) * width), round((float(x_to) - float(x)) * width), \
-                               round(float(y) * height), round((float(y_to) - float(y)) * height)
-            rect = QtCore.QRectF(x, y, x_to, y_to)
-            self.id_[len(self.id_) + 1] = self.sc.addRect(rect, QtGui.QPen(self.pen_color[self.current_color_num],
-                                                                           self.current_pen_thick))
-            self.color_num_func()
+        x, x_to, y, y_to = round((float(x) * width) - (float(x_to) * width) / 2), round(float(x_to) * width), \
+                           round((float(y) * height) - (float(x_to) * width) / 2), round(float(x_to) * width)
+        rect = QtCore.QRectF(x, y, x_to, y_to)
+        self.id_[len(self.id_) + 1] = self.sc.addRect(rect, QtGui.QPen(self.pen_color[self.current_color_num],
+                                                                       self.current_pen_thick))
+        self.color_num_func()
 
     def make_crossline(self):
         width, height = (main.graphicsView.width(), main.graphicsView.height())
