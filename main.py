@@ -117,6 +117,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def mousePressEvent(self, e):
         if e.button() == QtCore.Qt.LeftButton and not self.graphicsView.boxing:
+            if self.graphicsView.start.x() > self.graphicsView.end.x():
+                tmp = self.graphicsView.start.x()
+                self.graphicsView.start.setX(self.graphicsView.end.x())
+                self.graphicsView.end.setX(tmp)
+            if self.graphicsView.start.y() > self.graphicsView.end.y():
+                tmp = self.graphicsView.start.y()
+                self.graphicsView.start.setY(self.graphicsView.end.y())
+                self.graphicsView.end.setY(tmp)
             rect = QtCore.QRectF(self.graphicsView.start, self.graphicsView.end)
             pre_item = self.graphicsView.rect_draw[0]
             self.graphicsView.sc.removeItem(pre_item)
@@ -732,6 +740,14 @@ class newGraphicView(QtWidgets.QGraphicsView):
             self.end = self.mapToScene(e.pos())
             self.boxing = False
         elif e.button() == QtCore.Qt.LeftButton and (not self.boxing):
+            if self.start.x() > self.end.x():
+                tmp = self.start.x()
+                self.start.setX(self.end.x())
+                self.end.setX(tmp)
+            if self.start.y() > self.end.y():
+                tmp = self.start.y()
+                self.start.setY(self.end.y())
+                self.end.setY(tmp)
             rect = QtCore.QRectF(self.start, self.end)
             pre_item = self.rect_draw[0]
             self.sc.removeItem(pre_item)
