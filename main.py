@@ -841,7 +841,7 @@ class newGraphicView(QtWidgets.QGraphicsView):
             img_w, img_h = main.img_size
             x, y, x_to, y_to = int(x) / img_w, int(y) / img_h, int(x_to) / img_w, int(y_to) / img_h
         x, x_to, y, y_to = round((float(x) * width) - (float(x_to) * width) / 2), round(float(x_to) * width), \
-                           round((float(y) * height) - (float(x_to) * width) / 2), round(float(x_to) * width)
+                           round((float(y) * height) - (float(y_to) * height) / 2), round(float(y_to) * height)
         rect = QtCore.QRectF(x, y, x_to, y_to)
         self.id_[len(self.id_) + 1] = self.sc.addRect(rect, QtGui.QPen(self.pen_color[self.current_color_num],
                                                                        self.current_pen_thick))
