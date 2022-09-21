@@ -682,6 +682,7 @@ class NewClassFileDialog(QtWidgets.QDialog):
         self.listWidget.addItem(class_name)
         self.listWidget.setCurrentRow(self.listWidget.count() - 1)
         self.check_item()
+        self.classLineEdit.clear()
 
     def delete_button_clicked(self):
         row = self.listWidget.currentRow()
