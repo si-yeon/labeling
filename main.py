@@ -436,7 +436,11 @@ class MainWindow(QtWidgets.QMainWindow):
                 box_list = fr.read().splitlines()
             for box in box_list:
                 data = box.split(" ")
-                self.graphicsView.load_txt(data)
+                try:
+                    self.graphicsView.load_txt(data)
+                except:
+                    main.msg_box("Error", "Unreadable format.", "warning")
+                    break
 
     def cell_is_exists(self):
         for k, v in self.graphicsView.id_.items():
@@ -472,7 +476,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def delete_cell(self, row, column):
         self.graphicsView.delete_box(row)
-        self.graphicsView.current_color_num -= 1
+        if self.graphicsView.current_color_num > 0:
+            self.graphicsView.current_color_num -= 1
+        elif len(self.graphicsView.id_) == 0:
+            self.graphicsView.current_color_num = 0
+        else:
+            self.graphicsView.current_color_num = len(self.graphicsView.pen_color)
         self.labelTableWidget.removeRow(row)
 
     def to_delete_cell(self):
