@@ -153,10 +153,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.class_num = id_
 
     def up_func(self):
+        if not self.graphicsView.boxing:
+            self.graphicsView.complete_boxing()
         if self.fileListWidget.currentRow() < len(self.file_list):
             self.fileListWidget.setCurrentRow(self.fileListWidget.currentRow() + 1)
 
     def down_func(self):
+        if not self.graphicsView.boxing:
+            self.graphicsView.complete_boxing()
         if self.fileListWidget.currentRow() > 0:
             self.fileListWidget.setCurrentRow(self.fileListWidget.currentRow() - 1)
 
@@ -750,21 +754,24 @@ class newGraphicView(QtWidgets.QGraphicsView):
             self.end = self.mapToScene(e.pos())
             self.boxing = False
         elif e.button() == QtCore.Qt.LeftButton and (not self.boxing):
-            if self.start.x() > self.end.x():
-                tmp = self.start.x()
-                self.start.setX(self.end.x())
-                self.end.setX(tmp)
-            if self.start.y() > self.end.y():
-                tmp = self.start.y()
-                self.start.setY(self.end.y())
-                self.end.setY(tmp)
-            rect = QtCore.QRectF(self.start, self.end)
-            pre_item = self.rect_draw[0]
-            self.sc.removeItem(pre_item)
-            del pre_item
-            self.rect_draw.clear()
-            self.boxing_data_table_in(rect)
-            self.boxing = True
+            self.complete_boxing()
+
+    def complete_boxing(self):
+        if self.start.x() > self.end.x():
+            tmp = self.start.x()
+            self.start.setX(self.end.x())
+            self.end.setX(tmp)
+        if self.start.y() > self.end.y():
+            tmp = self.start.y()
+            self.start.setY(self.end.y())
+            self.end.setY(tmp)
+        rect = QtCore.QRectF(self.start, self.end)
+        pre_item = self.rect_draw[0]
+        self.sc.removeItem(pre_item)
+        del pre_item
+        self.rect_draw.clear()
+        self.boxing_data_table_in(rect)
+        self.boxing = True
 
     def mouseMoveEvent(self, e):
         mode = main.status["save values"]
