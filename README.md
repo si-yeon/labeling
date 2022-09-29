@@ -1,7 +1,14 @@
 <img width="800" src="https://github.com/dnlee119/labeling/blob/master/img/main.jpg?raw=true">
 
 ## How To Start
-start **main.py**
+<details open>
+<summary>Start</summary>
+
+```bash
+python -m pip install -r requirements.txt
+python main.py
+```
+</details>
 
 ## How To Use
 **Order**
