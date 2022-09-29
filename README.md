@@ -2,10 +2,15 @@
 
 ## How To Start
 <details open>
-<summary>Start</summary>
+<summary>Install</summary>
 
 ```bash
 python -m pip install -r requirements.txt
+```
+
+<summary>Start</summary>
+
+```bash
 python main.py
 ```
 </details>
