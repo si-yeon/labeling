@@ -11,7 +11,9 @@ Download ZIP and Unzip to the your folder
 
 python -m pip install -r requirements.txt
 ```
+</details>
 
+<details open>
 <summary>Start</summary>
 
 ```bash
