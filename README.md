@@ -5,6 +5,10 @@
 <summary>Install</summary>
 
 ```bash
+git clone https://github.com/dnlee119/labeling.git
+or
+Download ZIP and Unzip to the your folder
+
 python -m pip install -r requirements.txt
 ```
 
