@@ -4,14 +4,15 @@ import shutil
 import sys
 import os
 from PIL import Image
-from PyQt5 import QtWidgets, uic, QtCore, QtGui
+from PySide6 import QtWidgets, QtCore, QtGui
+
+from ui import ui_UI, ui_FC, ui_MD, ui_NCF
 
 
-class MainWindow(QtWidgets.QMainWindow):
+class MainWindow(QtWidgets.QMainWindow, ui_UI.Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        _ui = "./ui/UI.ui"
-        uic.loadUi(_ui, self)
+        self.setupUi(self)
         self.file_list = []
         self.current_number = 0
         self.graphicsview_size = (512, 288)
@@ -24,7 +25,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.label_path = ""
         self.file_loading = False
         self.delete_val = False
-        self.deleteAction = QtWidgets.QAction(self)
+        self.deleteAction = QtWidgets.QWidgetAction(self)
         self.init_fuc()
         self.show()
 
@@ -71,7 +72,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def ui_init(self):
         self.graphicsView = newGraphicView()
         self.graphicsViewGridLayout.addWidget(self.graphicsView)
-        self.save_values_group = QtWidgets.QActionGroup(self.menuSaveValues)
+        self.save_values_group = QtGui.QActionGroup(self.menuSaveValues)
         self.save_values_group.addAction(self.actionABS)
         self.save_values_group.addAction(self.actionREL)
         self.save_values_group.setExclusive(True)
@@ -494,22 +495,21 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def concatenate_dialog_start(self):
         start_dialog = Concatenate()
-        start_dialog.exec_()
+        start_dialog.exec()
 
     def new_class_file_dialog_start(self):
         start_dialog = NewClassFileDialog()
-        start_dialog.exec_()
+        start_dialog.exec()
 
     def make_dataset_dialog_start(self):
         start_dialog = MakeDataset()
-        start_dialog.exec_()
+        start_dialog.exec()
 
 
-class Concatenate(QtWidgets.QDialog):
+class Concatenate(QtWidgets.QDialog, ui_FC.Ui_Form):
     def __init__(self):
         super().__init__()
-        _ui = "./ui/FC.ui"
-        uic.loadUi(_ui, self)
+        self.setupUi(self)
         self.file_list = []
         self.class_path = ""
         self.class_dict = {}
@@ -640,11 +640,10 @@ class Concatenate(QtWidgets.QDialog):
         self.close()
 
 
-class NewClassFileDialog(QtWidgets.QDialog):
+class NewClassFileDialog(QtWidgets.QDialog, ui_NCF.Ui_Form):
     def __init__(self):
         super().__init__()
-        _ui = "./ui/NCF.ui"
-        uic.loadUi(_ui, self)
+        self.setupUi(self)
         self.class_path = ""
         self.class_dict = {}
         self.init_fuc()
@@ -902,11 +901,10 @@ class newGraphicView(QtWidgets.QGraphicsView):
         self.sc.addLine(self.y_line, QtGui.QPen(QtCore.Qt.black, 2))
 
 
-class MakeDataset(QtWidgets.QDialog):
+class MakeDataset(QtWidgets.QDialog, ui_MD.Ui_Form):
     def __init__(self):
         super().__init__()
-        _ui = "./ui/MD.ui"
-        uic.loadUi(_ui, self)
+        self.setupUi(self)
         self.rel = True
         self.file_list = []
         self.init_fuc()
@@ -1050,4 +1048,4 @@ class MakeDataset(QtWidgets.QDialog):
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     main = MainWindow()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
