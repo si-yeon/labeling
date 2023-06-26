@@ -143,4 +143,5 @@ class Ui_Form(object):
         self.doButton.setText(QCoreApplication.translate("Form", u"Do", None))
         self.findFileButton.setText(QCoreApplication.translate("Form", u"Find Files", None))
     # retranslateUi
+    # 포크 되었나?
 
